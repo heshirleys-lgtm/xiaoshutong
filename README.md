@@ -2,7 +2,7 @@
 
 把「看视频 + 拍书本页 + 语音开放问答 + 做练习」的 APP 学习过程，聚合为面向家长的 **6 维能力画像**，并为每个孩子建立专属成长信息库。
 
-> 在线演示（产品链接）：https://fbe3d0105abd4b59bf98d0d6e6c495c0.app.workbuddy.link
+> 在线演示（产品链接）：https://heshirleys-lgtm.github.io/xiaoshutong/
 
 ## 产品流程
 
@@ -62,7 +62,7 @@ node server.js            # 默认 http://localhost:3000
 
 ### 3) 产品链接版（web-demo）
 
-纯静态，直接用浏览器打开 `web-demo/index.html` 即可；也可托管到任意静态服务 / CloudStudio。
+纯静态，直接用浏览器打开 `web-demo/index.html` 即可；已部署至 GitHub Pages（稳定公开、零登录）：https://heshirleys-lgtm.github.io/xiaoshutong/
 
 ## 接入真实 AI（替换 Mock）
 
