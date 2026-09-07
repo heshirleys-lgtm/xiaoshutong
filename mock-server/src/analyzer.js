@@ -166,6 +166,21 @@ function countSig(text, pats) {
   return n;
 }
 
+// ---------- 无效回答检测 ----------
+// 「我不知道」「不记得」「嗯」这类回答没有实质内容，
+// 思维与表达类维度应当计 0，而不是拿保底分。
+function isEmptyAnswer(transcript) {
+  const t = (transcript || '').trim();
+  if (!t) return true;
+  const clean = t.replace(/[\s，。！？、；：,.!?…—\-""''（）()《》【】]/g, '');
+  if (clean.length < 3) return true;                            // 过短：「哦」「好」
+  if (/^[嗯哦啊呃哎吧呢呀啦嘛]+$/i.test(clean)) return true;      // 纯语气词
+  const m = clean.match(/^(我)?(不|没)(知道|清楚|记得|会|懂|明白|确定|晓得)/);
+  if (m && clean.slice(m[0].length).length < 4) return true;     // 「我不知道」「我不知道啊」
+  if (/^(不记得|不清楚|不会|不懂|不明白|忘了|忘记了|没印象|说不上来|不想说|随便|就这样|完了|没了|没有)$/.test(clean)) return true;
+  return false;
+}
+
 // ---------- 新增概念的语境归类（推断 / 联想 / 其他）----------
 function contextNear(text, concept, radius) {
   const i = text.indexOf(concept);
@@ -215,6 +230,10 @@ function linkAnalysis(pageText, transcript) {
 function insightFor(key, score, ev) {
   const L = ev.link;
   const C = ev.cls;
+  // 无有效回答：思维与表达类维度不评估（坚持韧性仍按客观数据给出）
+  if (ev.empty && key !== 'resilience') {
+    return '孩子本次没有给出实质性回答（如「我不知道」），该维度无法评估，建议换成更小、更具体的问题来引导。';
+  }
   const j = (arr, n) => (arr || []).slice(0, n || 3).join('、');
   const q = (s) => `「${s}」`;
   const m = {
@@ -251,7 +270,11 @@ function insightFor(key, score, ev) {
       return `视频 ${ev.videoCompletion}%、练习 ${ev.exerciseAccuracy}%，投入度有待提升，建议拆分任务、及时肯定小进步。`;
     },
   };
-  return m[key] ? m[key]() : '';
+  let txt = m[key] ? m[key]() : '';
+  if (ev.empty && key === 'resilience') {
+    txt += '（注：本次开放问答未产出有效内容，此项仅依据观看与练习的客观数据计算。）';
+  }
+  return txt;
 }
 
 // ---------- Mock 分析（完全由输入决定，无随机数）----------
@@ -281,24 +304,28 @@ function analyzeMock(input) {
     exerciseAccuracy,
   };
 
+  // 无效回答（"我不知道"等）：思维与表达类 5 个维度一律计 0，不再给保底分
+  const empty = isEmptyAnswer(transcript);
+  const hasAnswer = !empty && !!transcript.trim();
+
   // 1) 信息提取：书本关键概念在回答中的命中率
-  const infoScore = pageText.trim() ? clamp(Math.round(20 + link.rate * 80), 0, 100) : 0;
+  const infoScore = hasAnswer ? (pageText.trim() ? clamp(Math.round(20 + link.rate * 80), 0, 100) : 0) : 0;
 
   // 2) 推理判断：推理信号 + 书本外推断概念
   const rEv = rSig + cls.inf.length * 1.5;
-  const reasoningScore = transcript.trim() ? clamp(Math.round(28 + (Math.min(rEv, 6) / 6) * 72), 0, 100) : 0;
+  const reasoningScore = hasAnswer ? clamp(Math.round(28 + (Math.min(rEv, 6) / 6) * 72), 0, 100) : 0;
 
   // 3) 联想迁移：联想信号 + 生活/经验类外来概念
   const aEv = aSig + cls.ass.length * 1.5;
-  const associationScore = transcript.trim() ? clamp(Math.round(28 + (Math.min(aEv, 6) / 6) * 72), 0, 100) : 0;
+  const associationScore = hasAnswer ? clamp(Math.round(28 + (Math.min(aEv, 6) / 6) * 72), 0, 100) : 0;
 
   // 4) 批判质疑：质疑信号 + 疑问句
   const cEv = cSig + qCount * 1.3;
-  const criticalScore = transcript.trim() ? clamp(Math.round(28 + (Math.min(cEv, 6) / 6) * 72), 0, 100) : 0;
+  const criticalScore = hasAnswer ? clamp(Math.round(28 + (Math.min(cEv, 6) / 6) * 72), 0, 100) : 0;
 
   // 5) 表达组织：句数 + 连接词 + 平均句长 + 用字丰富度
   const lenBonus = avgLen >= 10 && avgLen <= 35 ? Math.min((avgLen - 10) * 1.2, 16) : (avgLen < 10 ? -12 : 6);
-  const expressionScore = transcript.trim()
+  const expressionScore = hasAnswer
     ? clamp(Math.round((sentences.length >= 3 ? 36 : sentences.length === 2 ? 26 : 12) + Math.min(eSig, 4) * 5 + lenBonus + uniq * 16), 0, 100)
     : 0;
 
@@ -306,6 +333,8 @@ function analyzeMock(input) {
   const retries = meta.retries || 0;
   const dur = meta.durationSec || 0;
   const resilienceScore = clamp(Math.round(videoCompletion * 0.45 + exerciseAccuracy * 0.35 + (retries > 0 ? 12 : 0) + (dur > 30 ? 8 : 0)), 0, 100);
+
+  ev.empty = empty; // 供洞察文案判断「是否无有效回答」
 
   const defs = [
     ['information_extraction', '信息提取', infoScore],
@@ -346,9 +375,12 @@ function analyzeMock(input) {
   order.slice(0, 2).forEach((d) => {
     if (d[2] < 85) suggestions.push(`【${d[1]}】当前 ${d[2]} 分。${ACTION[d[0]]}`);
   });
+  if (empty) {
+    suggestions.unshift('【本次无有效回答】孩子说的是「我不知道」这类回应，先别急着纠正：可指着书页问一个更小、更具体的问题（如「图上谁在做什么？」），降低表达门槛，再逐步追问。');
+  }
   if (!suggestions.length) suggestions.push('各维度表现均较好，可适度增加开放性与挑战性问题，保持孩子的表达欲。');
 
-  return { scores, overall, suggestions, link, cls };
+  return { scores, overall, suggestions, link, cls, empty };
 }
 
 // ---------- LLM 模式（预留，未配置自动回退 mock）----------
