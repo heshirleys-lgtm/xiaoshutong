@@ -1,0 +1,22 @@
+<!-- pages/exercise/exercise.wxml -->
+<view class="step-bar">
+  <view class="step-dot"><view class="dot">1</view>观看</view>
+  <view class="step-dot"><view class="dot">2</view>拍照</view>
+  <view class="step-dot"><view class="dot">3</view>语音</view>
+  <view class="step-dot active"><view class="dot">4</view>练习</view>
+</view>
+
+<view class="card">
+  <view class="title">第 4 步 · 完成练习</view>
+  <view class="muted" style="margin:8rpx 0">练习正确率将纳入家长报告</view>
+
+  <view wx:for="{{questions}}" wx:key="q" class="qcard">
+    <view class="qtitle">{{index+1}}. {{item.q}}</view>
+    <view wx:for="{{item.options}}" wx:for-item="opt" wx:for-index="oi" wx:key="*this"
+      class="opt {{picks[index]===oi?'opt-on':''}}" data-q="{{index}}" data-o="{{oi}}" bindtap="onPick">
+      {{opt}}
+    </view>
+  </view>
+
+  <button class="btn-primary" style="margin-top:24rpx" loading="{{submitting}}" bindtap="submit">提交并生成家长报告 →</button>
+</view>

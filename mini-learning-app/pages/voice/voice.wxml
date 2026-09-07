@@ -1,0 +1,25 @@
+<!-- pages/voice/voice.wxml -->
+<view class="step-bar">
+  <view class="step-dot"><view class="dot">1</view>观看</view>
+  <view class="step-dot"><view class="dot">2</view>拍照</view>
+  <view class="step-dot active"><view class="dot">3</view>语音</view>
+  <view class="step-dot"><view class="dot">4</view>练习</view>
+</view>
+
+<view class="card">
+  <view class="title">第 3 步 · 开放语音问答</view>
+  <view class="qbox">{{question}}</view>
+
+  <view class="rec-area">
+    <view wx:if="{{recording}}" class="rec-status">● 录音中 {{seconds}}s</view>
+    <view wx:elif="{{recorded}}" class="rec-status">✅ 已录制 {{seconds}}s</view>
+    <view wx:else class="rec-status muted">尚未录音</view>
+
+    <button wx:if="{{!recording}}" class="btn-primary" bindtap="startRecord">开始录音</button>
+    <button wx:else class="btn-primary" bindtap="stopRecord">停止录音</button>
+    <button wx:if="{{recorded && !recording}}" class="btn-ghost" bindtap="playback">回听</button>
+    <button wx:if="{{recorded && !recording}}" class="btn-ghost" bindtap="startRecord">重录</button>
+  </view>
+
+  <button class="btn-primary" style="margin-top:20rpx" bindtap="next" disabled="{{!recorded}}">提交语音，去做练习 →</button>
+</view>

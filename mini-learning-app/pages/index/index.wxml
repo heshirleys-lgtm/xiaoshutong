@@ -1,0 +1,27 @@
+<!-- pages/index/index.wxml -->
+<view class="card">
+  <view class="title">👋 欢迎使用智慧学习</view>
+  <view class="muted" style="margin-top:8rpx">把书本和语音变成家长看得懂的成长报告</view>
+
+  <view style="margin-top:24rpx">
+    <view class="muted">儿童ID（用于建立专属信息库）</view>
+    <input class="input" placeholder="如 child_001" value="{{childId}}" bindinput="onIdInput" />
+  </view>
+  <view style="margin-top:16rpx">
+    <view class="muted">孩子昵称</view>
+    <input class="input" placeholder="如 小明" value="{{childName}}" bindinput="onNameInput" />
+  </view>
+  <button class="btn-primary" style="margin-top:20rpx" bindtap="saveChild">保存儿童信息</button>
+</view>
+
+<view class="card">
+  <view class="title">今日学习</view>
+  <view class="muted" style="margin:12rpx 0">流程：观看视频 → 拍照书本页 → 语音开放问答 → 完成练习 → 生成家长报告</view>
+  <button class="btn-primary" bindtap="startLearning">开始学习</button>
+</view>
+
+<view class="card">
+  <view class="title">家长端</view>
+  <view class="muted" style="margin:12rpx 0">查看 6 维能力雷达与成长档案</view>
+  <button class="btn-ghost" bindtap="openProfile">查看成长档案</button>
+</view>

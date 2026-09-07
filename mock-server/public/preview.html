@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>学习力报告 · Web 预览</title>
+<style>
+  :root { --bg:#f5f7fb; --card:#fff; --line:#e6ebf2; --text:#1f2733; --sub:#6b7785;
+    --info:#2f7cf6; --good:#1aab6b; --warn:#e8923a; --bad:#e0524a; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--text); padding:24px; }
+  h1 { font-size:22px; margin:0 0 4px; }
+  .hint { color:var(--sub); font-size:13px; margin-bottom:20px; }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; max-width:1100px; }
+  @media(max-width:820px){ .grid{grid-template-columns:1fr;} }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 18px;
+    box-shadow:0 1px 3px rgba(20,40,80,.04); }
+  label { display:block; font-size:13px; color:var(--sub); margin:10px 0 4px; }
+  textarea, input { width:100%; border:1px solid var(--line); border-radius:8px; padding:9px 10px;
+    font-size:14px; font-family:inherit; resize:vertical; }
+  textarea { min-height:78px; }
+  .row { display:flex; gap:10px; }
+  .row > div { flex:1; }
+  button { cursor:pointer; border:none; border-radius:9px; padding:10px 16px; font-size:14px; font-weight:600; }
+  .primary { background:var(--info); color:#fff; }
+  .ghost { background:#eef3fb; color:var(--info); }
+  .report-head { display:flex; align-items:center; gap:18px; margin-bottom:8px; }
+  .overall { font-size:38px; font-weight:800; }
+  .dim { margin:14px 0; }
+  .dim-top { display:flex; justify-content:space-between; align-items:baseline; }
+  .dim-name { font-weight:700; font-size:15px; }
+  .dim-level { font-size:12px; padding:2px 9px; border-radius:20px; color:#fff; }
+  .bar { height:9px; background:#eef1f6; border-radius:6px; margin-top:6px; overflow:hidden; }
+  .bar > i { display:block; height:100%; border-radius:6px; transition:width .4s; }
+  .insight { font-size:13px; color:var(--sub); margin-top:5px; line-height:1.55; }
+  .sugg { background:#fbfdff; border:1px dashed var(--line); border-radius:10px; padding:12px 14px; font-size:13px; line-height:1.7; }
+  .sugg b { color:var(--info); }
+  .lv-优秀{background:var(--good);} .lv-良好{background:var(--warn);} .lv-待提升{background:var(--bad);}
+  .fill-good{background:var(--good);} .fill-warn{background:var(--warn);} .fill-bad{background:var(--bad);}
+  .muted{color:var(--sub); font-size:12px;}
+  .lib-row{display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--line); font-size:14px;}
+  svg text{font-size:11px;}
+</style>
+</head>
+<body>
+  <h1>📚 学习力 6 维家长报告</h1>
+  <div class="hint">Web 预览（无需微信开发者工具）。输入书本页文本 + 孩子语音回答，或点「随机样例」体验。后端地址：<span id="apiBase">http://localhost:3000</span></div>
+
+  <div class="grid">
+    <div class="card">
+      <label>儿童ID</label>
+      <input id="childId" value="child_demo" />
+      <label>书本页文本（OCR 结果）</label>
+      <textarea id="pageText" placeholder="粘贴书本页内容…"></textarea>
+      <label>孩子语音回答（STT 结果）</label>
+      <textarea id="transcript" placeholder="粘贴孩子回答…"></textarea>
+      <div class="row">
+        <div><label>视频观看完成度 %</label><input id="video" type="number" value="100" min="0" max="100" /></div>
+        <div><label>练习正确率 %</label><input id="exercise" type="number" value="80" min="0" max="100" /></div>
+      </div>
+      <div style="margin-top:14px; display:flex; gap:10px;">
+        <button class="primary" onclick="gen()">生成报告</button>
+        <button class="ghost" onclick="sample()">随机样例</button>
+      </div>
+      <div class="muted" style="margin-top:10px" id="status"></div>
+    </div>
+
+    <div class="card" id="reportCard" style="display:none;">
+      <div class="report-head">
+        <div class="overall" id="overall">--</div>
+        <div>
+          <div style="font-weight:700" id="childName">--</div>
+          <div class="muted" id="reportAt"></div>
+        </div>
+        <div style="margin-left:auto" id="radar"></div>
+      </div>
+      <div id="dims"></div>
+      <div style="margin-top:16px"><b style="font-size:14px">给家长的建议</b>
+        <div class="sugg" id="sugg" style="margin-top:8px"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid" style="margin-top:18px">
+    <div class="card">
+      <b style="font-size:15px">👪 儿童信息库（成长档案）</b>
+      <div style="margin:10px 0"><button class="ghost" onclick="loadLib()">刷新儿童列表</button></div>
+      <div id="childList"></div>
+      <div style="margin-top:12px">
+        <label>选择儿童查看维度趋势</label>
+        <select id="libSelect" onchange="showProfile()" style="width:100%;padding:8px;border-radius:8px;border:1px solid var(--line)"></select>
+      </div>
+      <div id="profileView" style="margin-top:12px"></div>
+    </div>
+  </div>
+
+<script>
+const API = 'http://localhost:3000';
+const DIMS = [
+  ['information_extraction','信息提取'],['reasoning','推理判断'],['association','联想迁移'],
+  ['critical','批判质疑'],['expression','表达组织'],['resilience','坚持韧性']
+];
+const SAMPLES = [
+  { page:'小蝌蚪游啊游，遇见了鲤鱼妈妈。鲤鱼妈妈告诉它：你的妈妈有四条腿，宽宽的嘴巴。小蝌蚪继续往前找，又遇见了乌龟。乌龟说：你的妈妈眼睛鼓鼓的，披着绿衣服。最后，小蝌蚪找到了青蛙妈妈。',
+    tr:'首先，小蝌蚪找妈妈的时候，鲤鱼说妈妈有四条腿、宽宽的嘴巴，乌龟说妈妈眼睛鼓鼓的、披绿衣服。由此我推测青蛙和乌龟不一样，青蛙没有壳。这让我想到我养的小金鱼，它也没有腿。不过我有点怀疑，为什么小蝌蚪自己会变样子呢？' },
+  { page:'把一个披萨平均分成4份，每一份就是它的四分之一，写作1/4。分母4表示平均分成几份，分子1表示取了几份。两张四分之一拼起来是二分之一。分数越大，表示取的份数越多。',
+    tr:'这张页讲分数。把一个披萨平均分成4份，每一份是四分之一，写作1/4。分母4表示分成几份，分子1表示取几份。两张四分之一拼起来是二分之一。如果分成8份，那每一份更小，这说明分母越大每份越小，我觉得这个和切蛋糕一样。' },
+  { page:'小蝌蚪遇见了鲤鱼妈妈和乌龟，它们告诉小蝌蚪妈妈长什么样。最后小蝌蚪找到了青蛙妈妈。',
+    tr:'小蝌蚪找妈妈。它看见了鲤鱼。然后又看见了乌龟。最后找到了。完了。' },
+];
+
+function sample(){ const s=SAMPLES[Math.floor(Math.random()*SAMPLES.length)];
+  document.getElementById('pageText').value=s.page; document.getElementById('transcript').value=s.tr; }
+
+function fillClass(score){ return score>=85?'good':score>=60?'warn':'bad'; }
+function levelClass(lv){ return 'lv-'+lv; }
+
+async function gen(previewOnly=true){
+  const payload={ childId:document.getElementById('childId').value,
+    pageText:document.getElementById('pageText').value,
+    transcript:document.getElementById('transcript').value,
+    videoCompletion:+document.getElementById('video').value||0,
+    exerciseAccuracy:+document.getElementById('exercise').value||0 };
+  document.getElementById('status').textContent='分析中…';
+  try{
+    const r=await fetch(API+'/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)});
+    const j=await r.json();
+    if(!j.ok) throw new Error(j.msg);
+    renderReport(payload.childId, j.analysis);
+    document.getElementById('status').textContent='✅ 报告已生成';
+  }catch(e){ document.getElementById('status').textContent='❌ '+e.message; }
+}
+
+function renderReport(childId, a){
+  document.getElementById('reportCard').style.display='block';
+  document.getElementById('childName').textContent=childId;
+  document.getElementById('reportAt').textContent=new Date().toLocaleString();
+  document.getElementById('overall').textContent=a.overall;
+  const dims=document.getElementById('dims'); dims.innerHTML='';
+  DIMS.forEach(([k,name])=>{
+    const d=a.scores[k]; if(!d) return;
+    const fc=fillClass(d.score);
+    const el=document.createElement('div'); el.className='dim';
+    el.innerHTML=`<div class="dim-top"><span class="dim-name">${name}</span>
+      <span class="dim-level ${levelClass(d.level)}">${d.level} · ${d.score}</span></div>
+      <div class="bar"><i class="fill-${fc}" style="width:${d.score}%"></i></div>
+      <div class="insight">${d.insight}</div>`;
+    dims.appendChild(el);
+  });
+  document.getElementById('sugg').innerHTML=a.suggestions.map(s=>'• '+s).join('<br>');
+  drawRadar(a.scores);
+}
+
+function drawRadar(scores){
+  const cx=80,cy=80,r=62; const n=DIMS.length; let pts=[];
+  DIMS.forEach(([k],i)=>{ const v=(scores[k]?scores[k].score:0)/100;
+    const ang=-Math.PI/2 + i*2*Math.PI/n; pts.push([cx+r*v*Math.cos(ang), cy+r*v*Math.sin(ang)]); });
+  let poly=pts.map(p=>p.join(',')).join(' ');
+  let grid=''; for(let g=1;g<=3;g++){ let pp=[]; DIMS.forEach(([k],i)=>{ const v=g/3;
+    const ang=-Math.PI/2 + i*2*Math.PI/n; pp.push(`${cx+r*v*Math.cos(ang)},${cy+r*v*Math.sin(ang)}`);});
+    grid+=`<polygon points="${pp.join(' ')}" fill="none" stroke="#e6ebf2"/>`; }
+  let labels=''; DIMS.forEach(([k,name],i)=>{ const ang=-Math.PI/2 + i*2*Math.PI/n;
+    labels+=`<text x="${cx+(r+14)*Math.cos(ang)}" y="${cy+(r+14)*Math.sin(ang)+4}" text-anchor="middle">${name}</text>`; });
+  document.getElementById('radar').innerHTML=`<svg width="160" height="160" viewBox="0 0 160 160">
+    ${grid}<polygon points="${poly}" fill="rgba(47,124,246,.25)" stroke="#2f7cf6" stroke-width="2"/>${labels}</svg>`;
+}
+
+async function loadLib(){
+  try{ const r=await fetch(API+'/api/children'); const j=await r.json();
+    const sel=document.getElementById('libSelect'); sel.innerHTML='';
+    j.children.forEach(c=>{ const o=document.createElement('option'); o.value=c.id; o.textContent=`${c.name}（${c.sessionCount}次）`; sel.appendChild(o); });
+    document.getElementById('childList').innerHTML=j.children.map(c=>`<div class="lib-row"><span>${c.name}</span><span class="muted">${c.sessionCount} 次学习</span></div>`).join('')||'<div class="muted">暂无数据</div>';
+    if(j.children.length) showProfile();
+  }catch(e){ document.getElementById('childList').innerHTML='<div class="muted">加载失败：'+e.message+'</div>'; }
+}
+
+async function showProfile(){
+  const id=document.getElementById('libSelect').value; if(!id) return;
+  const r=await fetch(API+'/api/child/'+encodeURIComponent(id)); const j=await r.json();
+  if(!j.ok) return;
+  const p=j.profile; const view=document.getElementById('profileView');
+  let html=`<div class="muted">共 ${p.sessionCount} 次 · 最近综合分 <b>${p.latest?p.latest.overall:'-'}</b></div>`;
+  DIMS.forEach(([k,name])=>{
+    const series=p.series[k]||[]; if(!series.length) return;
+    const last=series[series.length-1].score;
+    html+=`<div class="dim"><div class="dim-top"><span class="dim-name">${name}</span><span class="muted">最新 ${last}</span></div>
+      <div class="bar"><i class="fill-${fillClass(last)}" style="width:${last}%"></i></div></div>`;
+  });
+  view.innerHTML=html;
+}
+
+loadLib();
+</script>
+</body>
+</html>

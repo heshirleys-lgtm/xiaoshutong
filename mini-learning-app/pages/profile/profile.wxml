@@ -1,0 +1,24 @@
+<!-- pages/profile/profile.wxml -->
+<view wx:if="{{loading}}" class="card"><view class="muted">加载中…</view></view>
+<view wx:else class="wrap">
+  <view class="card head">
+    <view>
+      <view class="title">{{name}} 的成长档案</view>
+      <view class="muted">共 {{sessionCount}} 次学习 · 最近综合分 {{latestOverall}}</view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="title" style="margin-bottom:12rpx">六维能力变化趋势</view>
+    <view wx:for="{{dims}}" wx:key="name" class="dim">
+      <view class="dn">{{item.name}} <text class="muted" wx:if="{{item.last!=null}}">最新 {{item.last}}</text></view>
+      <view class="trend">
+        <view wx:for="{{item.series}}" wx:for-item="s" wx:key="*this" class="tcell">
+          <view class="tbar {{s>=85?'fill-good':s>=55?'fill-warn':'fill-bad'}}" style="height:{{s}}rpx"></view>
+        </view>
+        <view wx:if="{{item.series.length===0}}" class="muted">暂无数据</view>
+      </view>
+    </view>
+  </view>
+  <view style="height:30rpx"></view>
+</view>

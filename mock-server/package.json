@@ -1,0 +1,13 @@
+{
+  "name": "learning-mock-server",
+  "version": "1.0.0",
+  "description": "学习功能 Mock 后端：OCR/STT/6维AI分析/儿童信息库（零依赖，node 原生 http）",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/video/video",
+    "pages/photo/photo",
+    "pages/voice/voice",
+    "pages/exercise/exercise",
+    "pages/report/report",
+    "pages/profile/profile"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#2f7cf6",
+    "navigationBarTitleText": "智慧学习",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f5f7fb"
+  },
+  "permission": {
+    "scope.camera": { "desc": "用于拍摄书本对应页面" },
+    "scope.record": { "desc": "用于录制孩子的语音回答" }
+  },
+  "requiredPrivateInfos": ["getRecorderManager"],
+  "sitemapLocation": "sitemap.json",
+  "style": "v2"
+}

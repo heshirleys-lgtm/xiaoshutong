@@ -1,0 +1,3 @@
+/* pages/photo/photo.wxss */
+.camera-box { margin-top: 16rpx; border-radius: 16rpx; overflow: hidden; }
+.camera { width: 100%; height: 520rpx; }

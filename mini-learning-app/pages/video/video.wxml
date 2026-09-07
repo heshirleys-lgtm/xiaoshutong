@@ -1,0 +1,21 @@
+<!-- pages/video/video.wxml -->
+<view class="step-bar">
+  <view class="step-dot active"><view class="dot">1</view>观看</view>
+  <view class="step-dot"><view class="dot">2</view>拍照</view>
+  <view class="step-dot"><view class="dot">3</view>语音</view>
+  <view class="step-dot"><view class="dot">4</view>练习</view>
+</view>
+
+<view class="card">
+  <view class="title">第 1 步 · 观看学习视频</view>
+  <video class="video" src="{{src}}" bindtimeupdate="onTimeUpdate" bindended="onEnded" controls></video>
+  <view class="muted" style="margin-top:12rpx">观看完成度：{{percent}}%</view>
+  <view wx:if="{{manual}}" class="muted">（手动调整模式）</view>
+
+  <view style="margin-top:20rpx">
+    <view class="muted">若视频无法加载，可手动拖动设置完成度：</view>
+    <slider min="0" max="100" value="{{percent}}" bindchanging="onSlider" bindchange="onSlider" show-value />
+  </view>
+
+  <button class="btn-primary" style="margin-top:20rpx" bindtap="next">完成，去拍照 →</button>
+</view>

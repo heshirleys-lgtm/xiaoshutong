@@ -1,0 +1,27 @@
+<!-- pages/photo/photo.wxml -->
+<view class="step-bar">
+  <view class="step-dot"><view class="dot">1</view>观看</view>
+  <view class="step-dot active"><view class="dot">2</view>拍照</view>
+  <view class="step-dot"><view class="dot">3</view>语音</view>
+  <view class="step-dot"><view class="dot">4</view>练习</view>
+</view>
+
+<view class="card">
+  <view class="title">第 2 步 · 拍下书本对应页</view>
+  <view class="muted" style="margin:8rpx 0">请拍下视频中讲到、或任务要求对应的那一页</view>
+
+  <view class="camera-box">
+    <camera wx:if="{{!taken}}" class="camera" device-position="back" flash="auto" binderror="onError"></camera>
+    <image wx:else class="camera" src="{{photoPath}}" mode="aspectFill"></image>
+  </view>
+
+  <view wx:if="{{error}}" class="muted" style="color:#e0524a">{{error}}</view>
+
+  <block wx:if="{{!taken}}">
+    <button class="btn-primary" style="margin-top:20rpx" bindtap="takePhoto">📷 拍照</button>
+  </block>
+  <block wx:else>
+    <button class="btn-ghost" style="margin-top:20rpx" bindtap="retake">重拍</button>
+    <button class="btn-primary" style="margin-top:16rpx" bindtap="next">照片已就位，去语音回答 →</button>
+  </block>
+</view>

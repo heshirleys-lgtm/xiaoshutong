@@ -1,0 +1,2 @@
+/* pages/index/index.wxss */
+.input { margin-top: 8rpx; background: #f3f5f9; border-radius: 12rpx; padding: 18rpx 20rpx; font-size: 28rpx; }

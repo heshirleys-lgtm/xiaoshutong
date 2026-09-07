@@ -1,0 +1,184 @@
+{
+  "children": {
+    "child_demo": {
+      "id": "child_demo",
+      "name": "小明",
+      "createdAt": "2026-09-07T05:41:34.978Z",
+      "sessionIds": [
+        "s_mtqtc61013i3",
+        "s_mtqtc61d4jr2"
+      ]
+    }
+  },
+  "sessions": {
+    "s_mtqtc61013i3": {
+      "id": "s_mtqtc61013i3",
+      "childId": "child_demo",
+      "createdAt": "2026-09-07T05:41:34.980Z",
+      "question": "说说这一页讲了什么",
+      "videoCompletion": 100,
+      "exerciseAccuracy": 85,
+      "pageTitle": "《小蝌蚪找妈妈》第12页",
+      "pageText": "小蝌蚪游啊游，遇见了鲤鱼妈妈。鲤鱼妈妈告诉它：你的妈妈有四条腿，宽宽的嘴巴。小蝌蚪继续往前找，又遇见了乌龟。乌龟说：你的妈妈眼睛鼓鼓的，披着绿衣服。最后，小蝌蚪找到了青蛙妈妈，原来自己也会变成青蛙。",
+      "transcript": "首先，小蝌蚪找妈妈的时候，鲤鱼说妈妈有四条腿、宽宽的嘴巴，乌龟说妈妈眼睛鼓鼓的、披绿衣服。由此我推测青蛙和乌龟不一样，青蛙没有壳。这让我想到我养的小金鱼，它也没有腿。不过我有点怀疑，为什么小蝌蚪自己会变样子呢？",
+      "scores": {
+        "information_extraction": {
+          "key": "information_extraction",
+          "name": "信息提取",
+          "score": 54,
+          "level": "待提升",
+          "evidence": {
+            "coverage": 0.38,
+            "matched": 32,
+            "total": 84
+          },
+          "insight": "孩子对页面关键信息的提取较弱，仅覆盖 32/84 个要点，建议先陪读、指读关键词。"
+        },
+        "reasoning": {
+          "key": "reasoning",
+          "name": "推理判断",
+          "score": 55,
+          "level": "良好",
+          "evidence": {
+            "signals": 2
+          },
+          "insight": "孩子有一些推理意识（2 处），可多问\"为什么会这样\"来强化。"
+        },
+        "association": {
+          "key": "association",
+          "name": "联想迁移",
+          "score": 60,
+          "level": "良好",
+          "evidence": {
+            "signals": 2
+          },
+          "insight": "孩子有少量联想（2 处），可鼓励多举生活例子。"
+        },
+        "critical": {
+          "key": "critical",
+          "name": "批判质疑",
+          "score": 59,
+          "level": "良好",
+          "evidence": {
+            "signals": 2
+          },
+          "insight": "孩子偶有质疑（2 处），可保护并引导这种\"为什么\"。"
+        },
+        "expression": {
+          "key": "expression",
+          "name": "表达组织",
+          "score": 76,
+          "level": "良好",
+          "evidence": {
+            "sentences": 4,
+            "structureSignals": 2,
+            "uniqueRatio": 0.64
+          },
+          "insight": "表达尚可（4 句），可引导用\"首先/其次\"让逻辑更顺。"
+        },
+        "resilience": {
+          "key": "resilience",
+          "name": "坚持韧性",
+          "score": 96,
+          "level": "优秀",
+          "evidence": {
+            "videoCompletion": 100,
+            "exerciseAccuracy": 85,
+            "retries": 1,
+            "durationSec": 90
+          },
+          "insight": "视频完成度 100%、练习正确率 85%，且坚持投入，韧性很好。"
+        }
+      },
+      "overall": 67,
+      "suggestions": [
+        "【信息提取】孩子对页面关键信息的提取较弱，仅覆盖 32/84 个要点，建议先陪读、指读关键词。 家长可重点陪伴练习。",
+        "【坚持韧性】表现优秀，可适度增加挑战性任务保持兴趣。"
+      ]
+    },
+    "s_mtqtc61d4jr2": {
+      "id": "s_mtqtc61d4jr2",
+      "childId": "child_demo",
+      "createdAt": "2026-09-07T05:41:34.993Z",
+      "question": "《小蝌蚪找妈妈》第12页",
+      "videoCompletion": 90,
+      "exerciseAccuracy": 70,
+      "pageTitle": "《小蝌蚪找妈妈》第12页",
+      "pageText": "小蝌蚪游啊游，遇见了鲤鱼妈妈。鲤鱼妈妈告诉它：你的妈妈有四条腿，宽宽的嘴巴。小蝌蚪继续往前找，又遇见了乌龟。乌龟说：你的妈妈眼睛鼓鼓的，披着绿衣服。最后，小蝌蚪找到了青蛙妈妈，原来自己也会变成青蛙。",
+      "transcript": "首先，小蝌蚪找妈妈的时候，鲤鱼说妈妈有四条腿、宽宽的嘴巴，乌龟说妈妈眼睛鼓鼓的、披绿衣服。由此我推测青蛙和乌龟不一样，青蛙没有壳。这让我想到我养的小金鱼，它也没有腿。不过我有点怀疑，为什么小蝌蚪自己会变样子呢？",
+      "scores": {
+        "information_extraction": {
+          "key": "information_extraction",
+          "name": "信息提取",
+          "score": 55,
+          "level": "良好",
+          "evidence": {
+            "coverage": 0.38,
+            "matched": 32,
+            "total": 84
+          },
+          "insight": "孩子基本抓住了主要内容，但仍有部分关键信息（52 个）未提及，可引导其更细致地阅读。"
+        },
+        "reasoning": {
+          "key": "reasoning",
+          "name": "推理判断",
+          "score": 60,
+          "level": "良好",
+          "evidence": {
+            "signals": 2
+          },
+          "insight": "孩子有一些推理意识（2 处），可多问\"为什么会这样\"来强化。"
+        },
+        "association": {
+          "key": "association",
+          "name": "联想迁移",
+          "score": 61,
+          "level": "良好",
+          "evidence": {
+            "signals": 2
+          },
+          "insight": "孩子有少量联想（2 处），可鼓励多举生活例子。"
+        },
+        "critical": {
+          "key": "critical",
+          "name": "批判质疑",
+          "score": 58,
+          "level": "良好",
+          "evidence": {
+            "signals": 2
+          },
+          "insight": "孩子偶有质疑（2 处），可保护并引导这种\"为什么\"。"
+        },
+        "expression": {
+          "key": "expression",
+          "name": "表达组织",
+          "score": 73,
+          "level": "良好",
+          "evidence": {
+            "sentences": 4,
+            "structureSignals": 2,
+            "uniqueRatio": 0.64
+          },
+          "insight": "表达尚可（4 句），可引导用\"首先/其次\"让逻辑更顺。"
+        },
+        "resilience": {
+          "key": "resilience",
+          "name": "坚持韧性",
+          "score": 57,
+          "level": "良好",
+          "evidence": {
+            "videoCompletion": 90,
+            "exerciseAccuracy": 70,
+            "retries": 0,
+            "durationSec": 0
+          },
+          "insight": "视频 90%、练习 70%，整体有坚持，偶尔需鼓励。"
+        }
+      },
+      "overall": 61,
+      "suggestions": [
+        "各维度均处于良好水平，保持当前陪伴节奏即可。"
+      ]
+    }
+  }
+}

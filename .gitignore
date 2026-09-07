@@ -1,0 +1,6 @@
+# WorkBuddy 会话数据（非项目代码）
+.workbuddy/
+*.log
+node_modules/
+/tmp/
+.DS_Store

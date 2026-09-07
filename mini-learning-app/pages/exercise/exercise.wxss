@@ -1,0 +1,5 @@
+/* pages/exercise/exercise.wxss */
+.qcard { margin-top: 24rpx; }
+.qtitle { font-size: 28rpx; font-weight: 600; margin-bottom: 12rpx; }
+.opt { background: #f3f5f9; border-radius: 12rpx; padding: 18rpx 20rpx; margin-bottom: 12rpx; font-size: 27rpx; }
+.opt-on { background: #e7f0ff; color: #2f7cf6; font-weight: 600; border: 1rpx solid #2f7cf6; }

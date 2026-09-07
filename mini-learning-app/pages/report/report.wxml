@@ -1,0 +1,41 @@
+<!-- pages/report/report.wxml -->
+<view wx:if="{{loading}}" class="card"><view class="muted">报告生成中…</view></view>
+
+<view wx:elif="{{report}}" class="wrap">
+  <view class="card head">
+    <view class="overall">{{overall}}</view>
+    <view>
+      <view class="title">学习力综合报告</view>
+      <view class="muted">视频完成度 {{video}}% · 练习正确率 {{exercise}}%</view>
+      <view class="muted" wx:if="{{pageTitle}}">书本页：{{pageTitle}}</view>
+    </view>
+  </view>
+
+  <view class="card">
+    <canvas type="2d" id="radar" class="radar"></canvas>
+  </view>
+
+  <view class="card">
+    <view class="title" style="margin-bottom:12rpx">六维能力</view>
+    <view wx:for="{{dims}}" wx:key="key" class="dim">
+      <view class="dim-top"><text class="dn">{{item.name}}</text><text class="badge lv-{{item.level}}">{{item.level}} {{item.score}}</text></view>
+      <view class="bar"><view class="bar-fill {{item.score>=85?'fill-good':item.score>=55?'fill-warn':'fill-bad'}}" style="width:{{item.score}}%"></view></view>
+      <view class="insight">{{item.insight}}</view>
+    </view>
+  </view>
+
+  <view class="card" wx:if="{{suggestions.length}}">
+    <view class="title" style="margin-bottom:12rpx">给家长的建议</view>
+    <view class="sugg">
+      <view wx:for="{{suggestions}}" wx:key="*this" class="sugg-item">• {{item}}</view>
+    </view>
+  </view>
+
+  <view class="card" wx:if="{{transcript}}">
+    <view class="title" style="margin-bottom:8rpx">孩子语音原话（AI 分析依据）</view>
+    <view class="muted" style="line-height:1.6">{{transcript}}</view>
+  </view>
+
+  <button class="btn-ghost" bindtap="openProfile">查看成长档案</button>
+  <view style="height:30rpx"></view>
+</view>
